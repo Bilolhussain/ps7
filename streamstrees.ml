@@ -7,16 +7,18 @@
 (*======================================================================
 Section 2.1: Series acceleration with infinite streams
 
-In the file `nativeLazyStreams.ml`, we provide the definitions of lazy
-streams using OCaml's native `Lazy` module as presented in Section
-17.3 in the textbook, up to and including code for approximating pi
-through partial sums of the terms in a Taylor series (Section
-17.4). In lab 15, you used streams to find faster approximations for
-pi by averaging adjacent elements in the stream. In this section,
-you'll use Aitken's method to generate even faster convergence to
-pi. *)
+In the file `native_lazy_streams.ml`, we provide the definitions of
+lazy streams using OCaml's native `Lazy` module as presented in
+Section 17.3 in the textbook, and in the file `sample_streams.ml`, we
+provide some sample streams from that chapter, up to and including
+code for approximating pi through partial sums of the terms in a
+Taylor series (Section 17.4). In lab 15, you used streams to find
+faster approximations for pi by averaging adjacent elements in the
+stream. In this section, you'll use Aitken's method to generate even
+faster convergence to pi. *)
    
-open NativeLazyStreams ;;
+open Native_lazy_streams ;;
+open Sample_streams ;;
 
 (* Recall from Section 17.4 the use of streams to generate
 approximations of pi of whatever accuracy. Try it. You should be able
@@ -191,15 +193,15 @@ let tmap2 (f : 'a -> 'b -> 'c)
   failwith "tmap2 not implemented" ;;
 
 (*......................................................................
-bfenumerate tslist -- Returns a `LazyStreams.stream` of the nodes in
-the list of trees `tslist` enumerated in breadth-first order, that is,
-the root nodes of each of the trees, then the level one nodes, and so
+bfenumerate tree_list -- Returns a `stream` of the nodes in the list
+of trees `tree_list` enumerated in breadth-first order, that is, the
+root nodes of each of the trees, then the level one nodes, and so
 forth. There is an example of `bfenumerate` being applied below. If
 there isn't an infinite set of nodes in the list of trees (think about
 how that could come about), raise a `Finite_tree` exception.
 ......................................................................*)
    
-let bfenumerate (tslist : 'a tree list) : 'a stream =
+let bfenumerate (tree_list : 'a tree list) : 'a stream =
   failwith "bfenumerate not implemented" ;;
 
 (* Now you'll use your implementation to generate some interesting

@@ -4,7 +4,7 @@
                             Part 3: Music
  *) 
 
-module NLS = NativeLazyStreams ;;
+module NLS = Native_lazy_streams ;;
 
 exception InvalidHex ;;
 exception InvalidPitch ;;

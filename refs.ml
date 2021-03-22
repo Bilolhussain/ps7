@@ -7,10 +7,25 @@
 (* The type of mutable lists. *)
 type 'a mlist = Nil | Cons of 'a * 'a mlist ref ;;
 
-(*......................................................................
-Problem 1: Write a function `has_cycle` that returns whether a mutable
-list has a cycle. You may want a recursive auxiliary function. Don't
-worry about space usage.
+ (*......................................................................
+Problem 1: Write a function `has_cycle` that returns `true` if a
+mutable list has a cycle, `false` otherwise. You may want a recursive
+auxiliary function. Don't worry about space usage.
+
+For instance, we can establish a cyclic and an acyclic mutable list
+like this:
+
+    # let sample_end = ref Nil ;;
+    # let cyclic = Cons (1, ref (Cons (2, sample_end))) ;;
+    # sample_end := cyclic ;;
+    # let acyclic = Cons (3, ref (Cons(4, ref Nil))) ;;
+
+and test for cycles using `has_cycle`:
+
+    # has_cycle cyclic ;;
+    - : bool = true
+    # has_cycle acyclic ;;
+    - : bool = false
 ......................................................................*)
                                       
 let has_cycle (lst : 'a mlist) : bool =
