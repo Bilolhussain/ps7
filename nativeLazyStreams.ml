@@ -5,8 +5,10 @@
  *)
 
 (*......................................................................
-A native implementation of lazy streams with some useful functions and
-applications. See the corresponding .mli file for documentation.
+An implementation of lazy streams using OCaml's native `Lazy` module,
+along with with some useful functions. 
+
+See the corresponding .mli file for documentation.
 
                     YOU SHOULD NOT EDIT THIS FILE.
  *)
@@ -35,3 +37,8 @@ let rec smap2 (f : 'a -> 'b -> 'c)
             : 'c stream = 
   lazy (Cons (f (head s1) (head s2), 
               smap2 f (tail s1) (tail s2))) ;;
+
+let rec sfilter (pred : 'a -> bool) (s : 'a stream) : 'a stream =
+    lazy (if pred (head s)
+        then Cons((head s), sfilter pred (tail s))
+        else Lazy.force (sfilter pred (tail s))) ;;

@@ -7,9 +7,9 @@
 (*======================================================================
 Section 2.1: Series acceleration with infinite streams
 
-In the file `native_lazy_streams.ml`, we provide the definitions of
+In the file `nativeLazyStreams.ml`, we provide the definitions of
 lazy streams using OCaml's native `Lazy` module as presented in
-Section 17.3 in the textbook, and in the file `sample_streams.ml`, we
+Section 17.3 in the textbook, and in the file `sampleStreams.ml`, we
 provide some sample streams from that chapter, up to and including
 code for approximating pi through partial sums of the terms in a
 Taylor series (Section 17.4). In lab 15, you used streams to find
@@ -17,8 +17,8 @@ faster approximations for pi by averaging adjacent elements in the
 stream. In this section, you'll use Aitken's method to generate even
 faster convergence to pi. *)
    
-open Native_lazy_streams ;;
-open Sample_streams ;;
+open NativeLazyStreams ;;
+open SampleStreams ;;
 
 (* Recall from Section 17.4 the use of streams to generate
 approximations of pi of whatever accuracy. Try it. You should be able

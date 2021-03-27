@@ -4,6 +4,9 @@
                              Refs Testing
  *)
 
+open CS51Utils ;;
+open Absbook ;;
+
 (* Make your refs solution available for testing *)
 open Refs ;;
 
@@ -17,6 +20,13 @@ let list2 = Cons (1, ref (Cons (2, reflist))) ;;
 let _ = reflist := list2 ;;
 
 (* Some example tests. You'll want more. *)
-let _ =
-  assert(not(has_cycle list1a)) ;
-  assert(has_cycle(!reflist)) ;;
+let tests () =
+  unit_test (not (has_cycle list1a)) "list1a no cycle";
+  unit_test (has_cycle !reflist) "reflist has cycle";
+
+  (* More tests go here. . . *) 
+
+  () ;;
+
+
+let _ = tests () ;;
