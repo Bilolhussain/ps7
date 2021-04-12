@@ -88,8 +88,8 @@ Problem 5: Testing the acceleration
 
 Fill out the following table, recording how many steps are needed to
 get within different epsilons of pi using Aitken's method.
-
-#ifndef SOLN
+ *)
+(*
     -------------------------------------------------------------
     epsilon  |  pi_sums  |  averaged method  |  Aitken's method
     -------------------------------------------------------------
@@ -105,26 +105,8 @@ get within different epsilons of pi using Aitken's method.
     -------------------------------------------------------------
     0.000001 |  too many |               999 |
     -------------------------------------------------------------
-#else
-    ANSWER: Our experimentation yields the following values:
-
-    -------------------------------------------------------------
-    epsilon  |  pi_sums  |  averaged method  |  Aitken's method
-    -------------------------------------------------------------
-    0.1      |        19 |                 2 |                 0
-    -------------------------------------------------------------
-    0.01     |       199 |                 9 |                 2
-    -------------------------------------------------------------
-    0.001    |      1999 |                30 |                 6
-    -------------------------------------------------------------
-    0.0001   |     19999 |                99 |                15
-    -------------------------------------------------------------
-    0.00001  |    199999 |               315 |                35
-    -------------------------------------------------------------
-    0.000001 |  too many |               999 |                77
-    -------------------------------------------------------------
-#endif
-......................................................................*)
+ *)
+(*....................................................................*)
 
 (*======================================================================
 Section 2.2 : Infinite trees
@@ -166,8 +148,8 @@ let children (t : 'a tree) : 'a tree list =
 
 (*......................................................................
 print_depth n indent t -- Prints a representation of the first `n`
-levels of the tree `t` indented indent spaces. You can see some examples
-of the intended output of `print_depth` below.
+levels of the tree `t` indented `indent` spaces. You can see some
+examples of the intended output of `print_depth` below.
 ......................................................................*)
    
 let print_depth (n : int) (indent : int) (t : int tree) : unit =
