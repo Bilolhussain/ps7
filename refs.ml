@@ -29,7 +29,20 @@ and test for cycles using `has_cycle`:
 ......................................................................*)
                                       
 let has_cycle (lst : 'a mlist) : bool =
-  failwith "has_cycle not implemented"
+  let rec helper ls_cpy ls2_cpy : bool = 
+    match ls_cpy with 
+    |Nil -> false 
+    |Cons (x1, n1) -> (match ls2_cpy with
+        |Nil -> false
+        |Cons (x2, n2) -> (match !n1 with
+            | Nil -> false
+            | Cons (x3, n3) -> 
+                if (x1 = x3) && (!n1 == !n3) then true
+                else if (x1 = x2) && (!n1 == !n2) then
+                  helper lst (!n2)
+                else helper (!n1) (ls2_cpy) ))
+  in helper lst lst 
+;;
 
 (*......................................................................
 Problem 2: Write a function `flatten` that flattens a list (removes
