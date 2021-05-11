@@ -27,9 +27,22 @@ and test for cycles using `has_cycle`:
     # has_cycle acyclic ;;
     - : bool = false
 ......................................................................*)
-                                      
-let has_cycle (lst : 'a mlist) : bool =
-  failwith "has_cycle not implemented"
+                                        
+let rt_cycle ls ls_cpy : unit = 
+  let rec check (ls1: ('a mlist) ref) (ls2_ref: ('a mlist) ref) : bool =
+    (match !ls1 with 
+     |Nil -> None
+     |Cons (_, tl) -> match !tl with
+       |Nil -> None
+       |Cons (hd, y_ls) -> 
+          if ((y_ls !== Nil) && (!ls2_ref == y_ls)) then Some tl
+          else (check (tl) (!y_ls)) in
+  check ls_cpy (ref ls);;
+  
+let has_cycle (ls: 'a mlist) : bool =  
+  match ls with 
+  | Nil -> false
+  | Cons (_, _) -> if ((rt_cycle (ls) ([ref ls])) == None) then false else true;;
 
 (*......................................................................
 Problem 2: Write a function `flatten` that flattens a list (removes
@@ -37,8 +50,13 @@ its cycles if it has any) destructively. Again, you may want a
 recursive auxiliary function, and you shouldn't worry about space.
 ......................................................................*)
 
-let flatten (lst : 'a mlist) : unit =
-  failwith "flatten not implemented"
+let flatten (lst: 'a mlist)  : unit =
+  match lst with 
+  | Nil -> ()
+  | Cons (_, tail) -> if (has_cycle (lst)) then 
+        match (rt_cycle (ref lst)) with
+        | None -> ()
+        | Some t -> t:= Nil
 
 (*......................................................................
 Problem 3: Write a function `mlength`, which nondestructively finds
@@ -46,6 +64,25 @@ the number of nodes in a mutable list that may have cycles.
 ......................................................................*)
 let mlength (lst : 'a mlist) : int =
   failwith "mlength not implemented"
+  
+let rec helper_length mlst n  = 
+    match mlst with 
+    | Nil -> n
+    | Cons (_, tail) -> 
+        match !tail with
+        | Nil -> n+1
+        | Cons (_, rest) -> 
+            match !rest with
+            | Nil -> n+2
+            | Cons (_, rest') -> 
+                    if (!rest' == Nil) then n+2 else
+                    helper_length rest n+2;;
+                    
+let mlength (lst: 'a mlist) : int =
+  if (has_cycle lst) then flatten lst in 
+    match lst with
+    | Nil -> 0
+    | Cons (_, tl) -> helper_length tl 0;;
 
 (*======================================================================
 Reflection on the problem set
@@ -62,7 +99,7 @@ each of you (on average) spent on the problem set, not in total.)
 ......................................................................*)
 
 let minutes_spent_on_pset () : int =
-  failwith "time estimate not provided" ;;
+  800 ;;
 
 (*......................................................................
 It's worth reflecting on the work you did on this problem set, where
@@ -73,4 +110,4 @@ string below.
 ......................................................................*)
 
 let reflection () : string =
-  "...your reflections here..." ;;
+  "...Really enjoyed learning it..." ;;
