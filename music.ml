@@ -181,10 +181,13 @@ since you will call both the inner and outer functions at some
 point. See below for some examples.
 ......................................................................*)
 let rec list_to_stream (lst : obj list) : event NLS.stream =
-  let rec list_to_stream_aux remaining =
-    failwith "list_to_stream not implemented"
-  in list_to_stream_aux lst ;;
-
+  let rec list_to_stream_aux (r: float) (remaining: obj list) : event NLS.stream =
+   match remaining with
+    | [] -> shift_start r (list_to_stream lst)
+    | Note ((pc,d,vol)::tl) -> lazy (Cons (Tone(0., pc,vol), lazy (Cons (Stop(d,pc), list_to_stream_aux r tl))))
+    | Rest ((n)::tl) -> list_to_stream_aux tl d
+  in list_to_stream_aux 0. lst ;;
+  
 (*......................................................................
 Problem 2. Write a function `pair` that merges two event streams. Events
 that happen earlier in time should appear earlier in the merged
@@ -192,7 +195,14 @@ stream. See below for some examples.
 ......................................................................*)
 let rec pair (a : event NLS.stream) (b : event NLS.stream)
            : event NLS.stream =
-  failwith "pair not implemented" ;;
+  let Cons (e1, tl1) = Lazy.force a in 
+  let Cons (e2, tl2) = Lazy.force b in 
+  let find_fst = 
+    if (time_of_event e1 <= time_of_event e2) then 
+      lazy (Cons (e1, (pair (shift_start (-. (time_of_event e1)) e2) tl1) ))
+    else 
+      lazy (Cons (e2, (pair (shift_start (-. (time_of_event e2)) e1) tl2) ))  
+
 
 (*......................................................................
 Problem 3. Write a function `transpose` that takes an event stream and
