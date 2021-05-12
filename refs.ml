@@ -28,21 +28,21 @@ and test for cycles using `has_cycle`:
     - : bool = false
 ......................................................................*)
                                         
-let rt_cycle ls ls_cpy : unit = 
-  let rec check (ls1: ('a mlist) ref) (ls2_ref: ('a mlist) ref) : bool =
-    (match !ls1 with 
-     |Nil -> None
-     |Cons (_, tl) -> match !tl with
-       |Nil -> None
-       |Cons (hd, y_ls) -> 
-          if ((y_ls !== Nil) && (!ls2_ref == y_ls)) then Some tl
-          else (check (tl) (!y_ls)) in
-  check ls_cpy (ref ls);;
-  
+let rec check (mls: 'a mlist) (ls) : 'a mlist ref option =
+  match mls with
+  | Nil -> None
+  | Cons (_, tl) -> 
+      match !tl with 
+      | Nil -> None
+      | Cons (_, y_ls) -> 
+          if (!y_ls != Nil && List.exists (fun x -> !x == y_ls) ls) then Some tl 
+          else check !tl (ref tl::ls)
+;;
+
 let has_cycle (ls: 'a mlist) : bool =  
   match ls with 
   | Nil -> false
-  | Cons (_, _) -> if ((rt_cycle (ls) ([ref ls])) == None) then false else true;;
+  | Cons (_, _) -> if ( check ls [] == None) then false else true;;
 
 (*......................................................................
 Problem 2: Write a function `flatten` that flattens a list (removes
