@@ -209,7 +209,9 @@ examples of the intended output of `print_depth` below.
             (helper n indent lc, helper n indent rc);;
 *)
 let rec print_depth (n : int) (indent : int) (t : int tree) : unit =
-  let rec helper (n: int) (indent: int) (t: int tree) : unit  = 
+  failwith "print_depth not working";;
+  
+  (*let rec helper (n: int) (indent: int) (t: int tree) : unit  = 
     let output = node t in 
     let spaces = !indent in 
     let no_spaces := ref 0 in 
@@ -228,22 +230,33 @@ let rec print_depth (n : int) (indent : int) (t : int tree) : unit =
         in
         loop indent s 
   in 
-  print (helper n indent lc, helper n indent rc);;
+  print (helper n indent lc, helper n indent rc);;*)
 
 (*......................................................................
 tmap f t -- Returns a tree obtained by mapping the function `f` over
 each node in `t`.
 ......................................................................*)
    
-let tmap (f : 'a -> 'b) (t : 'a tree) : 'b tree =
-  failwith "tmap not implemented" ;;
-  
+ 
+
 let rec tmap (f : 'a -> 'b) (t : 'a tree) : 'b tree =
-  match t with
-  | Node (r, ls = []) -> f r
-  | Node (r', ls = [l_c = {Node (_, _)}, r_c = {Node (_, _)}]) -> Node (f r', lazy (tmap f l_c::tmap f r_c))
-  ;;
+ failwith "tmap not working" ;;
   (*
+  match Lazy.force t with 
+  | Node (r', [l_c; r_c]) ->
+      let Node (rootl, [_]) = Lazy.force l_c in 
+      let Node (rootr, [_]) = Lazy.force r_c in 
+      if (rootr != None && rootl != None) then 
+        Node (f r', [lazy (tmap f (Lazy.force l_c);tmap f (Lazy.force r_c))])
+      else
+        Node (f r', []);;
+  ;;
+  
+  let rec tmap (f : 'a -> 'b) (t : 'a tree) : 'b tree =
+  match Lazy.force t with 
+  | Node (r', [l_c; r_c]) -> Node ((f r'), lazy ([tmap f (Lazy.force l_c);tmap f (Lazy.force r_c)]) )
+  
+  
   let rec tmap (f : 'a -> 'b) (t : 'a tree) : 'b tree =
   match Lazy.force t with 
   | Node (r', [l_c; r_c]) ->
@@ -266,7 +279,7 @@ let tmap2 (f : 'a -> 'b -> 'c)
         : 'c tree =
   failwith "tmap2 not implemented" ;;
   
-let rec tmap2 (f : 'a -> 'b -> 'c)
+(*let rec tmap2 (f : 'a -> 'b -> 'c)
               (t1 : 'a tree) (t2 : 'b tree)
             : 'c tree =
    match t1, t2 with
@@ -275,7 +288,7 @@ let rec tmap2 (f : 'a -> 'b -> 'c)
   | Node (r, ls = [t_lc != []; t_rc != []]), Node (r', ls' = [t_lc'!= [], t_rc' != []]) 
     ->
       Node (Node ((f r) (f r'), lazy (f tl_c)::lazy (f t_rc):: lazy (tmap2 f tl_c)::lazy (tmap2 f t_rc)))
-
+*)
 (*......................................................................
 bfenumerate tree_list -- Returns a `stream` of the nodes in the list
 of trees `tree_list` enumerated in breadth-first order, that is, the
@@ -287,14 +300,15 @@ how that could come about), raise a `Finite_tree` exception.
    
 let bfenumerate (tree_list : 'a tree list) : 'a stream =
   failwith "bfenumerate not implemented" ;;
-  
+
+(*
 let rec bfenumerate (tslist : 'a tree list) : 'a stream =
   match tslist with 
-  | Node (r, ls = (fst == Nil, tl == Nil) ) -> lazy Cons (r, [])
+  | Node (r, (fst == Nil, tl == Nil) ) -> lazy Cons (r, [])
   | Node (r, ls = (fst !== Nil, tl == Nil) ) -> lazy Cons (r, lazy (Cons((bfenumerate fst), Nil)))
   | Node (r, ls = (fst == Nil, tl != Nil) ) -> lazy Cons (r, lazy (Cons (Nil, (bfenumerate tl)))
   | Node (r, ls = [fst;tl]) -> lazy Cons (r, Cons (lazy (bfenumerate fst), lazy (bfenumerate tl)) ;;
-
+*)
 
 (* Now you'll use your implementation to generate some interesting
 infinite trees.  Hint: Drawing a tree considering how the values
@@ -305,12 +319,8 @@ problems. *)
 onest -- An infinite binary tree all of whose nodes hold the integer 1.
 ......................................................................*)
    
-let onest : int tree =
-  lazy (failwith "onest not implemented") ;;
-  
 let rec onest : int tree =
   Node (1, [onest, onest]);; ;;
-
 
 (*......................................................................
 levels n -- Returns an infinite binary tree where the value of each
@@ -327,24 +337,22 @@ argument `n`. For example:
       2...
     - : unit = ()
 ......................................................................*)
-   
-let levels (n : int) : int tree =
-  failwith "levels not implemented" ;;
-  
+     
 let rec levels (n : int) : int tree =
-  let rec loop ln_times n () =
-      if (ln_times == 0) then 
-        let ll = l := !l + 1 in 
-        Node (n+1, lazy (loop l*l ll)))
-      else 
-        let ln_tm = ln_times := !ln_times - 1 in 
-        Node (n, lazy [loop ln_tm l])
-      in
-  let l := !n in
+  failwith "levels not working"" ;;
+  
+  (*let rec loop ln_times n () =
+    if (ln_times == 0) then 
+      let ll = l := !l + 1 in 
+      Node (n+1, lazy (loop l*l ll))
+    else 
+      let ln_tm = ln_times := !ln_times - 1 in 
+      Node (n, lazy [loop ln_tm l])
+  in
+  let l = !n in
   if (n==0) then Node (0, lazy [loop 1 1])
   else 
-  lazy loop l*l l;
-
+    lazy loop l*l l;;*)
 
 (*......................................................................
 tree_nats -- An infinite binary tree where the value of each
@@ -365,16 +373,15 @@ starting with 0. For example:
     - : int list = [0; 1; 2; 3; 4; 5; 6; 7; 8; 9]
 ......................................................................*)
    
-let tree_nats : int tree =
-  lazy (failwith "tree_nats not implemented") ;;
-  
 let rec tree_nats : int tree =
-  let rec loop (t: int stream) () =
+  failwith "tree_nats not working" ;;
+  
+  (*let rec loop (t: int stream) () =
     let r = node t in
-    match t with 
+    match Lazy.force t with 
     | Node (r, children t)
     | Node (r, [lc;rc]) -> Node (0, (lazy (loop (mapt (fun x -> x * 2) lc )))::(lazy loop (mapt (fun x -> ((x * 2) + 1)) rc ))) in
-  loop nats
+  loop nats;;*)
 
 (*======================================================================
 Reflection on the problem set
