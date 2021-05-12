@@ -184,8 +184,8 @@ let rec list_to_stream (lst : obj list) : event NLS.stream =
   let rec list_to_stream_aux (remaining: obj list) : event NLS.stream =
    match remaining with
     | [] -> list_to_stream lst
-    | Note ((pc,d,vol)::tl) -> lazy (Cons (Tone(0., pc,vol), lazy (Cons (Stop(d,pc), list_to_stream_aux tl))))
-    | Rest ((n)::tl) -> shift_start n (list_to_stream_aux tl)
+    | Note (pc,d,vol)::tl -> lazy (Cons (Tone(0., pc,vol), lazy (Cons (Stop(d,pc), list_to_stream_aux tl))))
+    | Rest (n)::tl -> shift_start n (list_to_stream_aux tl)
   in list_to_stream_aux lst
 ;;
   
@@ -198,11 +198,13 @@ let rec pair (a : event NLS.stream) (b : event NLS.stream)
            : event NLS.stream =
   let Cons (e1, tl1) = Lazy.force a in 
   let Cons (e2, tl2) = Lazy.force b in 
+  let t1 = time_of_event e1 in 
+  let t2 = time_of_event e2 in 
   let find_fst = 
-    if (time_of_event e1 <= time_of_event e2) then 
-      lazy (Cons (e1, (pair (shift_start (-. (time_of_event e1)) e2) tl1) ))
+    if ((t1 < t2) || (t1 == t2)) then 
+      lazy (Cons (e1, (pair (shift_start (-. (t1)) e2) tl1)) )
     else 
-      lazy (Cons (e2, (pair (shift_start (-. (time_of_event e2)) e1) tl2) ))  
+      lazy (Cons (e2, (pair (shift_start (-. (t2)) e1) tl2) )) 
 ;;
 
 (*......................................................................
