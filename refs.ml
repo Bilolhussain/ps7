@@ -28,7 +28,7 @@ and test for cycles using `has_cycle`:
     - : bool = false
 ......................................................................*)
                                         
-let rec check (mls: 'a mlist) (ls) : 'a mlist ref option =
+let rec check (mls: 'a mlist) (ls:'a mlist ref list) : 'a mlist ref option =
   match mls with
   | Nil -> None
   | Cons (_, tl) -> 
@@ -62,27 +62,19 @@ let flatten (lst: 'a mlist)  : unit =
 Problem 3: Write a function `mlength`, which nondestructively finds
 the number of nodes in a mutable list that may have cycles.
 ......................................................................*)
-let mlength (lst : 'a mlist) : int =
-  failwith "mlength not implemented"
-  
-let rec helper_length mlst n  = 
-    match mlst with 
-    | Nil -> n
-    | Cons (_, tail) -> 
-        match !tail with
-        | Nil -> n+1
-        | Cons (_, rest) -> 
-            match !rest with
-            | Nil -> n+2
-            | Cons (_, rest') -> 
-                    if (!rest' == Nil) then n+2 else
-                    helper_length rest n+2;;
+let rec helper_length (mls: 'a mlist) (ls: 'a mlist ref list) (n: int) : int  = 
+  match mls with 
+  | Nil -> n
+  | Cons (_, tail) -> 
+      if (has_cycle mls) then n 
+      else 
+      if (!tail == Nil) then n+1 else 
+        (helper_length !tail (tail::ls) n+1);;
                     
 let mlength (lst: 'a mlist) : int =
-  if (has_cycle lst) then flatten lst in 
-    match lst with
-    | Nil -> 0
-    | Cons (_, tl) -> helper_length tl 0;;
+  let find_cycle = (if (has_cycle lst) then flatten lst) in 
+  if (lst == Nil) then 0 
+  else helper_length lst [] 0;;
 
 (*======================================================================
 Reflection on the problem set
