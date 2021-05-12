@@ -91,7 +91,7 @@ each of you (on average) spent on the problem set, not in total.)
 ......................................................................*)
 
 let minutes_spent_on_pset () : int =
-  800 ;;
+  1400 ;;
 
 (*......................................................................
 It's worth reflecting on the work you did on this problem set, where
@@ -102,4 +102,4 @@ string below.
 ......................................................................*)
 
 let reflection () : string =
-  "...Really enjoyed learning it..." ;;
+  "I learned a great deal about manipulating references and wish my eyes allowed me to spend more time than I did" ;;
